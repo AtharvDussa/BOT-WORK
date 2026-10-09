@@ -31,7 +31,7 @@ export type ApiOrder = {
 
 type Student = { id: string; name: string; email: string; grade: string }
 
-const apiBaseUrl = import.meta.env.VITE_API_URL || ""
+const apiBaseUrl = import.meta.env.VITE_API_URL || "https://bot-work-production-44c5.up.railway.app"
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem("bot-token")
