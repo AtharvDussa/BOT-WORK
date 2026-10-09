@@ -1,14 +1,18 @@
 import dns from 'node:dns';
 
 dns.setServers(['8.8.8.8', '1.1.1.1']);
+import { existsSync } from "node:fs"
+import { readFile } from "node:fs/promises"
 import "dotenv/config"
 import { createServer } from "node:http"
 import { createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto"
+import { extname, resolve, sep } from "node:path"
 import { MongoClient } from "mongodb"
 import nodemailer from "nodemailer"
-import { pathToFileURL } from "node:url"
+import { fileURLToPath, pathToFileURL } from "node:url"
 import { OAuth2Client } from "google-auth-library"
 
+const frontendDistDirectory = fileURLToPath(new URL("../robo kit front end/dist/", import.meta.url))
 const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://127.0.0.1:27017"
 const databaseName = process.env.MONGODB_DATABASE || "robo_kit"
 const port = Number(process.env.PORT || 5000)
@@ -21,6 +25,17 @@ const adminSessions = new Map()
 const orderStatuses = ["Pending", "Processing", "Shipped", "Delivered"]
 const queryStatuses = ["Open", "In Progress", "Answered", "Closed"]
 const paymentMethods = ["UPI", "Card", "Net Banking", "QR Code", "Cash on Delivery"]
+const frontendContentTypes = {
+  ".css": "text/css; charset=utf-8",
+  ".html": "text/html; charset=utf-8",
+  ".ico": "image/x-icon",
+  ".js": "text/javascript; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".txt": "text/plain; charset=utf-8",
+  ".webp": "image/webp",
+}
 
 const projects = [
   { id: 1, name: "Smart Plant Monitor", description: "Build a sensor-powered system that cares for your plants.", price: 1499, grade: "Grade 8", difficulty: "Intermediate", category: "IoT", time: "4–6 hours", image: "https://images.unsplash.com/photo-1631378297854-185cff6b0986?auto=format&fit=crop&w=900&q=85", accent: "mint", stock: 18 },
@@ -64,6 +79,54 @@ async function connectDatabase() {
 function send(response, status, payload) {
   response.writeHead(status, { "Content-Type": "application/json; charset=utf-8" })
   response.end(JSON.stringify(payload))
+}
+
+async function serveFrontend(request, response, pathname) {
+  if (!["GET", "HEAD"].includes(request.method) || pathname === "/api" || pathname.startsWith("/api/")) {
+    return false
+  }
+  if (!existsSync(frontendDistDirectory)) return false
+
+  let decodedPath
+  try {
+    decodedPath = decodeURIComponent(pathname)
+  } catch {
+    response.writeHead(400)
+    response.end()
+    return true
+  }
+
+  const root = resolve(frontendDistDirectory)
+  let filePath = decodedPath === "/" || decodedPath.endsWith("/")
+    ? resolve(root, "index.html")
+    : resolve(root, `.${decodedPath}`)
+  if (filePath !== root && !filePath.startsWith(`${root}${sep}`)) {
+    response.writeHead(404)
+    response.end()
+    return true
+  }
+
+  let content
+  try {
+    content = await readFile(filePath)
+  } catch (error) {
+    if (error.code !== "ENOENT" && error.code !== "ENOTDIR" && error.code !== "EISDIR") throw error
+    if (pathname.startsWith("/assets/")) {
+      response.writeHead(404)
+      response.end()
+      return true
+    }
+    filePath = resolve(root, "index.html")
+    content = await readFile(filePath)
+  }
+
+  const isAsset = pathname.startsWith("/assets/")
+  response.writeHead(200, {
+    "Content-Type": frontendContentTypes[extname(filePath).toLowerCase()] || "application/octet-stream",
+    "Cache-Control": isAsset ? "public, max-age=31536000, immutable" : "no-cache",
+  })
+  response.end(request.method === "HEAD" ? undefined : content)
+  return true
 }
 
 async function readJson(request) {
@@ -190,6 +253,7 @@ export function createApiServer() {
     }
 
     try {
+      if (await serveFrontend(request, response, url.pathname)) return
       if (request.method === "GET" && url.pathname === "/api/health") {
         await database.command({ ping: 1 })
         return send(response, 200, { status: "ok", database: "connected" })

@@ -4,6 +4,17 @@ Run MongoDB locally, or create a MongoDB Atlas cluster. Copy `.env.example` to `
 
 Install dependencies with `npm install`, then run the API from this directory with `npm start` (Node.js 20 or newer). It listens on port `5000` by default; set `PORT` to change it. The API waits for MongoDB to connect before accepting requests.
 
+## Deploy frontend and API together on Railway
+
+The API serves the frontend build from `../robo kit front end/dist` when that folder exists. To deploy both from the repository's existing Railway service:
+
+1. Set the service Root Directory to `/`.
+2. Set the Build Command to `npm ci --prefix "robo kit backend" && npm install --prefix "robo kit front end" --no-package-lock && VITE_GOOGLE_CLIENT_ID="$GOOGLE_CLIENT_ID" npm run build --prefix "robo kit front end"`.
+3. Set the Start Command to `npm start --prefix "robo kit backend"`.
+4. Set `FRONTEND_URL` and `CORS_ORIGINS` to the service's public HTTPS domain. Keep the existing MongoDB and authentication variables.
+
+The frontend uses the same public domain for API requests. Set `GOOGLE_CLIENT_ID` to the Google OAuth web client ID and add the public site origin to that client's Authorized JavaScript origins. Railway's `PORT` is used automatically.
+
 The frontend's Vite development server listens on port `8443` by default. Its `.env.local` sets `VITE_API_URL=http://localhost:5000`, so API requests go directly to the backend. The backend allows CORS from `http://localhost:8443` by default; set `CORS_ORIGINS` to a comma-separated list to add other allowed origins. Start the API and frontend in separate terminals.
 
 Google student sign-in requires a Google OAuth 2.0 **Web application** client. In Google Cloud Console, configure the OAuth consent screen and add each development/production website origin to **Authorized JavaScript origins**. The default development origin is `http://localhost:8443`; also authorize the exact host and port used by any alternate development server (for example, `http://127.0.0.1:8444`). Put the client ID in `GOOGLE_CLIENT_ID` in the backend `.env` and the same public client ID in `VITE_GOOGLE_CLIENT_ID` in the frontend `.env.local` (copy `.env.example`); restart both servers and rebuild the frontend after setting it. No client secret is needed for this GIS ID-token flow. Use HTTPS for deployed sites; localhost is allowed for development. The backend verifies the ID token signature, issuer, audience, and verified-email claim with Google's auth library before checking the registered student email. This proves Google-account ownership; merely entering an email does not.
