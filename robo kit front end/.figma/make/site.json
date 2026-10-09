@@ -1,0 +1,10 @@
+{
+  "description": "Discover and purchase DIY educational project kits tailored for students, enabling hands-on learning experiences through curated components and materials.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "robo-kit-backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.5",
+    "google-auth-library": "^11.1.0",
+    "mongodb": "^7.7.0",
+    "mongoose": "^9.10.3",
+    "nodemailer": "^10.0.13"
+  },
+  "version": "1.0.0",
+  "description": "Run MongoDB locally, or create a MongoDB Atlas cluster. Copy `.env.example` to `.env` and set `MONGODB_URI` to your MongoDB connection string. The existing `MONGO_URI` variable is also supported; `MONGODB_URI` takes precedence if both are set. Keep `.env` private and never commit it.",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

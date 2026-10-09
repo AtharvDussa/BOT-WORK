@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+.vite/
+.env*
+!.env.example
+.vscode/
+*.log
+*.tsbuildinfo
+robo kit backend/data/store.json
