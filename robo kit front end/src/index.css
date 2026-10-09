@@ -95,3 +95,95 @@ html[data-theme="dark"] .payment-demo-note{background:#192230;color:var(--muted)
 .detail-components>strong{display:block;margin-bottom:9px;font-size:12px;color:#333f52}
 .detail-components ul{display:flex;flex-wrap:wrap;gap:7px;margin:0;padding:0;list-style:none}
 .detail-components li{padding:6px 10px;border:1px solid #e8eaf0;border-radius:999px;background:#fff;color:#596579;font-size:11px;font-weight:600}
+
+/* Responsive layout refinements */
+.landing-grid>*,.dashboard-hero-grid>*,.landing-feature>*,.catalog-layout>*,.detail-layout>*,.checkout-grid>*,.profile-layout>*,.help-layout>*,.admin-charts>*{min-width:0}
+.cart-item-info,.cart-item-end,.order-card-body>div:nth-child(2){min-width:0}
+.cart-item-info>button:not(.remove-link),.order-card-body>div:nth-child(2)>strong{overflow-wrap:anywhere}
+.hero-buttons{flex-wrap:wrap;gap:12px 18px}
+
+@media(max-width:850px){
+  .dashboard-hero-grid{grid-template-columns:minmax(0,1fr);gap:0}
+  .dashboard-hero-copy{padding:42px 0 10px}
+  .dashboard-art{height:350px}
+}
+@media(max-width:760px){
+  .landing-grid{grid-template-columns:1fr;gap:0}
+  .landing-copy{max-width:680px}
+  .hero-visual{height:400px;margin-top:12px}
+  .landing-feature{grid-template-columns:1fr;gap:30px}
+  .trust-inner{justify-content:flex-start;flex-wrap:wrap;padding-block:18px}
+  .checkout-grid{grid-template-columns:minmax(0,1fr)}
+  .profile-layout{grid-template-columns:minmax(0,1fr)}
+  .footer-grid{grid-template-columns:1.5fr 1fr 1fr;gap:24px}
+}
+
+@media(max-width:650px){
+  .landing-grid{padding-top:34px}
+  .hero-visual{height:350px}
+  .catalog-toolbar{align-items:stretch}
+  .filter-panel{scrollbar-width:thin}
+  .reset-filters{display:inline-flex;align-items:center;flex:none;padding:8px 10px;margin:0;border:1px solid #f1d3c1;border-radius:7px}
+  .form-card,.payment-card,.summary-card{min-width:0}
+  .cart-item{min-width:0}
+  .cart-item-end{gap:12px}
+  .invoice-address,.invoice-top{gap:15px}
+  .invoice-address{align-items:flex-start;flex-direction:column}
+  .timeline{gap:2px}
+  .timeline strong{font-size:9px;line-height:1.35}
+  .checkout-product>span{white-space:nowrap}
+  .admin-top-actions{flex-wrap:wrap}
+  .admin-panel-header>.btn{max-width:100%}
+  .admin-query-detail .admin-panel-header{flex-direction:column}
+}
+
+@media(max-width:480px){
+  .container{width:calc(100% - 28px)}
+  .header-inner{gap:10px}
+  .header-right{gap:8px}
+  .brand img{width:145px}
+  .landing-copy h1{font-size:clamp(50px,13vw,62px)}
+  .landing-actions>.btn{max-width:100%;white-space:normal}
+  .hero-stats{justify-content:space-between}
+  .hero-stats>div{min-width:0}
+  .hero-stats strong{font-size:17px}
+  .trust-inner{gap:12px 16px}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:28px 18px}
+  .footer-grid>div:first-child,.footer-news{grid-column:1/-1}
+  .page-intro h1{font-size:clamp(32px,9vw,38px);overflow-wrap:anywhere}
+  .catalog-toolbar{flex-direction:column}
+  .sort-field{font-size:11px;justify-content:space-between}
+  .sort-field select{max-width:none}
+  .detail-main-image{height:clamp(250px,85vw,330px)}
+  .detail-actions{grid-template-columns:1fr}
+  .tabs{gap:18px}
+  .form-grid{grid-template-columns:minmax(0,1fr)}
+  .span-two{grid-column:auto}
+  .payment-methods{grid-template-columns:minmax(0,1fr)}
+  .status-details{padding-inline:12px}
+  .invoice-columns{flex-direction:column}
+  .invoice-columns>div:last-child{width:100%}
+  .invoice-columns>div:last-child>div{flex-direction:row}
+  .invoice-totals{width:min(100%,245px)}
+  .order-card-top{align-items:flex-start;gap:12px;flex-direction:column}
+  .order-card-top>div:last-child{flex-wrap:wrap}
+  .admin-stats,.admin-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .admin-stat{min-width:0}
+  .admin-stat>div{gap:5px}
+  .admin-stat>div>span:first-child{overflow-wrap:anywhere}
+  .admin-attention-grid{grid-template-columns:minmax(0,1fr)}
+  .admin-product-modal{padding:18px}
+  .demo-qr{width:120px;height:120px}
+  .toast{left:10px;right:10px;bottom:10px}
+  .field input,.search-field input,.help-form-card textarea,.admin-toolbar input,.admin-query-detail textarea{font-size:16px}
+}
+
+@media(max-width:650px){
+  .dashboard-hero-copy>p{max-width:none;overflow-wrap:anywhere}
+  .dashboard-hero-copy .hero-buttons{align-items:stretch;flex-direction:column;gap:10px}
+  .dashboard-hero-copy .hero-buttons>.btn,
+  .dashboard-hero-copy .hero-buttons>.text-link{width:100%;max-width:100%;min-width:0;justify-content:center;text-align:center;white-space:normal}
+  .dashboard-art{min-width:0}
+  .dashboard-art-frame{width:min(82%,320px);height:82%;transform:rotate(-3deg)}
+  .art-sticker.sticker-two{right:8px;transform:none}
+}
